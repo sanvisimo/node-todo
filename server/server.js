@@ -15,9 +15,10 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-app.post('/todos', (req, res) =>{
+app.post('/todos', authenticate, (req, res) =>{
     let todo = new Todo({
-       text: req.body.text
+       text: req.body.text,
+        _creator: req.user._id
     });
 
     todo.save().then((doc) => {
@@ -70,7 +71,7 @@ app.delete('/todos/:id', (req, res) => {
     });
 });
 
-app.patch('/todos/:id', (req, res) => {
+app.patch('/todos/:id', authenticate, (req, res) => {
     let id = req.params.id;
 
     let body = _.pick(req.body, ['text', 'completed']);
